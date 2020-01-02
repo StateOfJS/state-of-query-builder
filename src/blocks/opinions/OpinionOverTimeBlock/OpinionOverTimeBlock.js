@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { gql } from 'apollo-boost'
 import { useQuery } from '@apollo/react-hooks'
-import { AddChart, EnumSelector, Filters, StreamChart } from '../../../core'
+import { AddChart, EnumSelector, Filters, StreamChart, Query } from '../../../core'
 import { opinions } from '../../../constants'
 
 const QUERY = gql`
@@ -21,13 +21,14 @@ const QUERY = gql`
     }
 `
 
-const OpinionOverTime = ({ opinion, filters, setIsLoading }) => {
+const OpinionOverTime = ({ opinion, filters, setIsLoading, showQuery }) => {
     const [current, setCurrent] = useState(null)
+    const variables = {
+        id: opinion,
+        filters
+    }
     const { loading, error, data } = useQuery(QUERY, {
-        variables: {
-            id: opinion,
-            filters
-        },
+        variables,
         fetchPolicy: 'no-cache'
     })
 
@@ -38,7 +39,8 @@ const OpinionOverTime = ({ opinion, filters, setIsLoading }) => {
     const years = data !== undefined ? data.survey.opinion.allYears : []
 
     return (
-        <div>
+        <>
+            {showQuery && <Query query={QUERY} variables={variables} />}
             {years.length > 0 && (
                 <div style={{ height: 300 }}>
                     <StreamChart
@@ -52,7 +54,7 @@ const OpinionOverTime = ({ opinion, filters, setIsLoading }) => {
                     />
                 </div>
             )}
-        </div>
+        </>
     )
 }
 

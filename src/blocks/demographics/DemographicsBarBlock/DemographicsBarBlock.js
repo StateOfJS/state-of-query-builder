@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import _ from 'lodash'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
-import { AddChart, Filters, VerticalBarChart } from '../../../core'
+import { AddChart, Filters, VerticalBarChart, Query } from '../../../core'
 import { keys } from '../../../constants'
 
 const generateQuery = metric => gql`
-    query DemographicsSalary($year: Int!, $filters: Filters) {
+    query Demographics${_.upperFirst(metric)}($year: Int!, $filters: Filters) {
         survey(survey: js) {
             demographics {
                 metric: ${metric}(filters: $filters) {
@@ -23,12 +24,11 @@ const generateQuery = metric => gql`
     }
 `
 
-const DemographicBar = ({ metric, year, filters, setIsLoading }) => {
+const DemographicBar = ({ metric, year, filters, setIsLoading, showQuery }) => {
+    const query = generateQuery(metric)
+    const variables = { year, filters }
     const { loading, error, data } = useQuery(generateQuery(metric), {
-        variables: {
-            year,
-            filters
-        },
+        variables,
         fetchPolicy: 'no-cache'
     })
 
@@ -52,22 +52,21 @@ const DemographicBar = ({ metric, year, filters, setIsLoading }) => {
     })
 
     return (
-        <div>
+        <>
+            {showQuery && <Query query={query} variables={variables} />}
             {buckets.length > 0 && (
-                <div>
-                    <VerticalBarChart
-                        keys={keys[metric]}
-                        total={data.survey.demographics.metric.year.total}
-                        buckets={sortedBuckets}
-                        i18nNamespace={metric}
-                        // translateData={translateData}
-                        mode="relative"
-                        units="count"
-                        // viewportWidth={width}
-                    />
-                </div>
+                <VerticalBarChart
+                    keys={keys[metric]}
+                    total={data.survey.demographics.metric.year.total}
+                    buckets={sortedBuckets}
+                    i18nNamespace={metric}
+                    // translateData={translateData}
+                    mode="relative"
+                    units="percentage"
+                    // viewportWidth={width}
+                />
             )}
-        </div>
+        </>
     )
 }
 

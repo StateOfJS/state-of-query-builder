@@ -18,8 +18,12 @@ a {
     color: inherit;
 }
 
-select {
+select,
+textarea {
     font-family: inherit;
+}
+
+select {
     font-size: 14px;
     line-height: 14px;
     -moz-appearance: none;

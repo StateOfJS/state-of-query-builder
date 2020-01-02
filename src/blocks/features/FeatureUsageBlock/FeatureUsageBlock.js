@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
-import { AddChart, Filters, GaugeBarChart } from '../../../core'
+import { AddChart, Filters, GaugeBarChart, Query } from '../../../core'
 import { FeatureSelector } from '../FeatureSelector'
 import { featureExperience } from '../../../constants'
 
@@ -9,14 +9,7 @@ const QUERY = gql`
     query FeatureUsage($id: FeatureID!, $year: Int!, $filters: Filters) {
         survey(survey: js) {
             feature(id: $id) {
-                id
                 name
-                mdn {
-                    locale
-                    url
-                    title
-                    summary
-                }
                 experience(filters: $filters) {
                     year(year: $year) {
                         year
@@ -36,13 +29,14 @@ const QUERY = gql`
     }
 `
 
-const FeatureUsage = ({ feature, year, filters, setIsLoading }) => {
+const FeatureUsage = ({ feature, year, filters, setIsLoading, showQuery }) => {
+    const variables = {
+        id: feature,
+        year,
+        filters
+    }
     const { loading, error, data } = useQuery(QUERY, {
-        variables: {
-            id: feature,
-            year,
-            filters
-        },
+        variables,
         fetchPolicy: 'no-cache'
     })
 
@@ -74,6 +68,7 @@ const FeatureUsage = ({ feature, year, filters, setIsLoading }) => {
 
     return (
         <div>
+            {showQuery && <Query query={QUERY} variables={variables} />}
             {noData && 'No data for the selected parameters.'}
             {buckets.length > 0 && (
                 <div style={{ height: 40 }}>

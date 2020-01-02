@@ -8,6 +8,7 @@ import { Home, FeatureUsage, Opinions, Happiness, DemographicsBar } from './page
 const Container = styled.div`
     display: grid;
     grid-template-columns: 200px auto;
+    padding-right: 30px;
 `
 
 const NavTitle = styled.h3`

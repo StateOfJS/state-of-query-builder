@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSync, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { faSync, faSpinner, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { filtersConfig } from './constants'
 import AddFilter from './AddFilter'
 import Filter from './Filter'
@@ -18,7 +18,6 @@ const FiltersContainer = styled.div`
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    margin-bottom: 9px;
     padding: 0 20px 12px;
 `
 
@@ -42,8 +41,29 @@ const RefreshButton = styled.button`
     }
 `
 
+const ShowQueryButton = styled.div`
+    padding: 5px 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 12px;
+    margin-right: 16px;
+    border-radius: 2px;
+    border: 1px solid #777;
+    color: #e1e1e1;
+    background: #222429;
+
+    &:hover {
+        background: #e1e1e1;
+        border-color: #e1e1e1;
+        color: #222429;
+    }
+`
+
 export const Filters = ({ children, ...props }) => {
     const [isLoading, setIsLoading] = useState(false)
+    const [showQuery, setShowQuery] = useState(false)
     const [activeFilters, setActiveFilters] = useState([])
     const inactiveFilters = allFilters.filter(f => !activeFilters.includes(f))
     const handleAddFilter = type => {
@@ -100,12 +120,16 @@ export const Filters = ({ children, ...props }) => {
                     {inactiveFilters.length > 0 && (
                         <AddFilter availableFilters={inactiveFilters} onAdd={handleAddFilter} />
                     )}
+                    <ShowQueryButton onClick={() => setShowQuery(flag => !flag)}>
+                        <FontAwesomeIcon icon={showQuery ? faEyeSlash : faEye} />
+                    </ShowQueryButton>
                 </FiltersContainer>
             </form>
             {React.cloneElement(children, {
                 ...props,
                 filters,
-                setIsLoading
+                setIsLoading,
+                showQuery
             })}
         </Container>
     )

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { gql } from 'apollo-boost'
 import { useQuery } from '@apollo/react-hooks'
-import { AddChart, EnumSelector, Filters } from '../../../core'
+import { AddChart, EnumSelector, Filters, Query } from '../../../core'
 import { HappinessOverTimeChart } from './HappinessOverTimeChart'
 
 const QUERY = gql`
@@ -19,12 +19,13 @@ const QUERY = gql`
     }
 `
 
-const HappinessOverTime = ({ category, filters, setIsLoading }) => {
+const HappinessOverTime = ({ category, filters, setIsLoading, showQuery }) => {
+    const variables = {
+        id: category,
+        filters
+    }
     const { loading, error, data } = useQuery(QUERY, {
-        variables: {
-            id: category,
-            filters
-        },
+        variables,
         fetchPolicy: 'no-cache'
     })
 
@@ -34,7 +35,12 @@ const HappinessOverTime = ({ category, filters, setIsLoading }) => {
 
     const years = data !== undefined ? data.survey.category.happiness.allYears : []
 
-    return <div>{years.length > 0 && <HappinessOverTimeChart data={years} />}</div>
+    return (
+        <div>
+            {showQuery && <Query query={QUERY} variables={variables} />}
+            {years.length > 0 && <HappinessOverTimeChart data={years} />}
+        </div>
+    )
 }
 
 export const HappinessOverTimeBlock = () => {
