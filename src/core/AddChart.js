@@ -11,26 +11,31 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    margin: 20px 0;
+    margin: 32px 0;
 `
 
 const Icon = styled.div`
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     display: flex;
-    font-size: 18px;
+    font-size: 16px;
     background-color: #222429;
     border: 2px solid #e1e1e1;
     border-radius: 50%;
     box-shadow: 0 0 0 5px #222429;
     justify-content: center;
     align-items: center;
+
+    &:hover {
+        background-color: #e1e1e1;
+        color: #222429;
+    }
 `
 
 export const AddChart = ({ onAdd }) => {
     return (
-        <Container onClick={onAdd}>
-            <Icon>
+        <Container>
+            <Icon onClick={onAdd}>
                 <FontAwesomeIcon icon={faPlus} />
             </Icon>
         </Container>

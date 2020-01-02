@@ -54,31 +54,30 @@ export const Filters = ({ children, ...props }) => {
 
     const { register, handleSubmit, watch } = useForm()
     const [filters, setFilters] = useState({})
-    const onSubmit = data => {
-        console.log(data)
-        const currentFilters = {}
+    const onSubmit = rawFilters => {
+        const computedFilters = {}
         activeFilters.forEach(filter => {
-            if (data[filter] !== undefined) {
-                if (data[filter].operator === 'eq' && data[filter].value !== 'all') {
-                    currentFilters[filter] = {
-                        eq: data[filter].value
+            if (rawFilters[filter] !== undefined) {
+                if (rawFilters[filter].operator === 'eq' && rawFilters[filter].value !== 'all') {
+                    computedFilters[filter] = {
+                        eq: rawFilters[filter].value
                     }
                 }
-                if (data[filter].operator === 'in' && data[filter].value.length > 0) {
-                    currentFilters[filter] = {
-                        in: data[filter].value
+                if (rawFilters[filter].operator === 'in' && rawFilters[filter].value.length > 0) {
+                    computedFilters[filter] = {
+                        in: rawFilters[filter].value
                     }
                 }
-                if (data[filter].operator === 'nin' && data[filter].value.length > 0) {
-                    currentFilters[filter] = {
-                        nin: data[filter].value
+                if (rawFilters[filter].operator === 'nin' && rawFilters[filter].value.length > 0) {
+                    computedFilters[filter] = {
+                        nin: rawFilters[filter].value
                     }
                 }
             }
         })
-        console.log(currentFilters)
+        console.log('filters', { rawFilters, computedFilters })
 
-        setFilters(currentFilters)
+        setFilters(computedFilters)
     }
 
     return (

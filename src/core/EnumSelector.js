@@ -3,31 +3,32 @@ import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
 
 const QUERY = gql`
-    query AllFeatures {
-        survey(survey: js) {
-            features {
-                id
+    query EnumValues($name: String!) {
+        __type(name: $name) {
+            enumValues {
                 name
             }
         }
     }
 `
 
-export const FeatureSelector = ({ onSelect }) => {
-    const { loading, error, data } = useQuery(QUERY)
+export const EnumSelector = ({ name, onSelect }) => {
+    const { loading, error, data } = useQuery(QUERY, {
+        variables: { name }
+    })
 
     if (loading) return 'Loading...'
     if (error) return `Error! ${error.message}`
 
-    let features = []
+    let values = []
     if (!loading) {
-        features = data.survey.features
+        values = data.__type.enumValues.map(e => e.name)
     }
 
     const handleChange = event => {
-        const feature = event.target.value
-        if (feature !== '') {
-            onSelect(feature)
+        const opinion = event.target.value
+        if (opinion !== '') {
+            onSelect(opinion)
         }
     }
 
@@ -37,9 +38,9 @@ export const FeatureSelector = ({ onSelect }) => {
                 {loading && '...loading...'}
                 {!loading && '-- select --'}
             </option>
-            {features.map(feature => (
-                <option key={feature.id} value={feature.id}>
-                    {feature.name}
+            {values.map(value => (
+                <option key={value} value={value}>
+                    {value}
                 </option>
             ))}
         </select>
