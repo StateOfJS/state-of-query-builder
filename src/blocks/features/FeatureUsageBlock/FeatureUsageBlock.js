@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/react-hooks'
 import { gql } from 'apollo-boost'
-import { AddChart, Filters } from '../../../core'
+import { AddChart, Filters, GaugeBarChart } from '../../../core'
 import { FeatureSelector } from '../FeatureSelector'
+import { featureExperience } from '../../../constants'
 
 const QUERY = gql`
     query FeatureUsage($id: FeatureID!, $year: Int!, $filters: Filters) {
@@ -35,7 +36,7 @@ const QUERY = gql`
     }
 `
 
-const FeatureUsage = ({ feature, year, filters }) => {
+const FeatureUsage = ({ feature, year, filters, setIsLoading }) => {
     const { loading, error, data } = useQuery(QUERY, {
         variables: {
             id: feature,
@@ -45,29 +46,44 @@ const FeatureUsage = ({ feature, year, filters }) => {
         fetchPolicy: 'no-cache'
     })
 
+    useEffect(() => setIsLoading(loading), [setIsLoading, loading])
+
     if (error) return `Error! ${error.message}`
 
     const noData = data !== undefined && data.survey.feature.experience.year === null
-    const buckets = data !== undefined && !noData ? data.survey.feature.experience.year.buckets : []
+    let buckets = data !== undefined && !noData ? data.survey.feature.experience.year.buckets : []
+
+    // @todo: handle normalization directly in the survey
+    buckets = buckets.map(bucket => {
+        let id
+        if (bucket.id === 'heard') {
+            id = 'know_not_used'
+        }
+        if (bucket.id === 'neverheard') {
+            id = 'never_heard_not_sure'
+        }
+        if (bucket.id === 'used') {
+            id = 'used_it'
+        }
+
+        return {
+            ...bucket,
+            id
+        }
+    })
 
     return (
         <div>
-            {loading && '...loading...'}
             {noData && 'No data for the selected parameters.'}
             {buckets.length > 0 && (
-                <table>
-                    <tbody>
-                        {buckets.map(bucket => {
-                            return (
-                                <tr key={bucket.id}>
-                                    <th>{bucket.id}</th>
-                                    <td>{bucket.percentage}%</td>
-                                    <td>[{bucket.count}]</td>
-                                </tr>
-                            )
-                        })}
-                    </tbody>
-                </table>
+                <div style={{ height: 40 }}>
+                    <GaugeBarChart
+                        buckets={buckets}
+                        colorMapping={featureExperience}
+                        units="count"
+                        applyEmptyPatternTo="never_heard_not_sure"
+                    />
+                </div>
             )}
         </div>
     )

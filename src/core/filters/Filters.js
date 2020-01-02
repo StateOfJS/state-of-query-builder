@@ -43,6 +43,7 @@ const RefreshButton = styled.button`
 `
 
 export const Filters = ({ children, ...props }) => {
+    const [isLoading, setIsLoading] = useState(false)
     const [activeFilters, setActiveFilters] = useState([])
     const inactiveFilters = allFilters.filter(f => !activeFilters.includes(f))
     const handleAddFilter = type => {
@@ -85,7 +86,8 @@ export const Filters = ({ children, ...props }) => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FiltersContainer>
                     <RefreshButton type="submit">
-                        <FontAwesomeIcon icon={faSync} />
+                        {isLoading && 'loading...'}
+                        {!isLoading && <FontAwesomeIcon icon={faSync} />}
                     </RefreshButton>
                     {activeFilters.map(filter => (
                         <Filter
@@ -103,7 +105,8 @@ export const Filters = ({ children, ...props }) => {
             </form>
             {React.cloneElement(children, {
                 ...props,
-                filters
+                filters,
+                setIsLoading
             })}
         </Container>
     )
