@@ -227,6 +227,7 @@ export const zeroToFiveRange = [0, 1, 2, 3, 4]
 
 export const cssProficiencyArray = zeroToFiveRange
 export const backendProficiencyArray = zeroToFiveRange
+
 export const opinions = [
     { id: 4, color: colors.red },
     { id: 3, color: colors.redLight },

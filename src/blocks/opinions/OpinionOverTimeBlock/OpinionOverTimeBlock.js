@@ -1,7 +1,8 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment, useEffect } from 'react'
 import { gql } from 'apollo-boost'
 import { useQuery } from '@apollo/react-hooks'
-import { AddChart, EnumSelector, Filters } from '../../../core'
+import { AddChart, EnumSelector, Filters, StreamChart } from '../../../core'
+import { opinions } from '../../../constants'
 
 const QUERY = gql`
     query OpinionOverTime($id: OpinionID!, $filters: Filters) {
@@ -9,12 +10,6 @@ const QUERY = gql`
             opinion(id: $id, filters: $filters) {
                 allYears {
                     year
-                    total
-                    completion {
-                        total
-                        count
-                        percentage
-                    }
                     buckets {
                         id
                         count
@@ -26,7 +21,8 @@ const QUERY = gql`
     }
 `
 
-const OpinionOverTime = ({ opinion, filters }) => {
+const OpinionOverTime = ({ opinion, filters, setIsLoading }) => {
+    const [current, setCurrent] = useState(null)
     const { loading, error, data } = useQuery(QUERY, {
         variables: {
             id: opinion,
@@ -35,41 +31,26 @@ const OpinionOverTime = ({ opinion, filters }) => {
         fetchPolicy: 'no-cache'
     })
 
+    useEffect(() => setIsLoading(loading), [setIsLoading, loading])
+
     if (error) return `Error! ${error.message}`
 
     const years = data !== undefined ? data.survey.opinion.allYears : []
 
     return (
         <div>
-            {loading && '...loading...'}
             {years.length > 0 && (
-                <table>
-                    <tbody>
-                        {years.map(year => {
-                            return (
-                                <Fragment key={year.year}>
-                                    <tr>
-                                        <th>{year.year}</th>
-                                        <td>
-                                            completion:&nbsp;
-                                            {year.completion.percentage}% ({year.completion.count}/
-                                            {year.completion.total})
-                                        </td>
-                                    </tr>
-                                    {year.buckets.map(bucket => {
-                                        return (
-                                            <tr key={bucket.id}>
-                                                <th>{bucket.id}</th>
-                                                <td>{bucket.percentage}%</td>
-                                                <td>{bucket.count}</td>
-                                            </tr>
-                                        )
-                                    })}
-                                </Fragment>
-                            )
-                        })}
-                    </tbody>
-                </table>
+                <div style={{ height: 300 }}>
+                    <StreamChart
+                        colorScale={opinions.map(o => o.color)}
+                        current={current}
+                        data={years}
+                        keys={opinions.map(o => o.id)}
+                        units="count"
+                        applyEmptyPatternTo="never_heard"
+                        // namespace={bucketKeysName}
+                    />
+                </div>
             )}
         </div>
     )
