@@ -1,10 +1,10 @@
 import React from 'react'
 import { FeatureUsageBlock } from '../blocks'
 
-export const Feature = () => {
+export const FeatureUsage = () => {
     return (
         <div>
-            <h1>Feature</h1>
+            <h1>Feature Usage</h1>
             <FeatureUsageBlock />
         </div>
     )

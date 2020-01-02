@@ -1,18 +1,8 @@
-import { getColor, colors, colorRange, fontFamily } from './constants.js'
+import { getColor, colors, fontFamily } from './constants.js'
 
 export default {
     name: 'state_of',
     fontFamily,
-    // background: '#ffffff',
-    opinionColors: {
-        would_use: colors.pink,
-        would_not_use: colors.pinkLight,
-        interested: colors.blue,
-        not_interested: colors.blueDark,
-        never_heard: colors.greyLight
-    },
-    opinionScaleColors: colorRange,
-    salaryColors: colorRange,
     emptyPattern: {
         id: 'empty',
         type: 'patternLines',
@@ -70,8 +60,7 @@ export default {
     legends: {
         text: {
             fontSize: 11,
-            fill: colors.greyLight,
-            fontFamily
+            fill: colors.greyLight
         }
     },
     tooltip: {
@@ -88,7 +77,6 @@ export default {
             fill: colors.navyDark,
             fontSize: 12,
             fontWeight: 500,
-            fontFamily,
             textShadow: `0px 2px 3px rgba(0,0,0,0.35)`
         }
     },

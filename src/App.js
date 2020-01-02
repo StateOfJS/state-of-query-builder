@@ -3,18 +3,27 @@ import { Router, Link } from '@reach/router'
 import { ApolloProvider } from '@apollo/react-hooks'
 import styled from 'styled-components'
 import client from './api_client'
-import { Home, Feature, Opinions, Happiness } from './pages'
+import { Home, FeatureUsage, Opinions, Happiness } from './pages'
 
 const Container = styled.div`
     display: grid;
-    grid-template-columns: 160px auto;
+    grid-template-columns: 200px auto;
+`
+
+const NavTitle = styled.h3`
+    margin: 0;
+    padding: 7px 20px;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 16px;
 `
 
 const NavLink = styled(Link)`
     display: block;
-    padding: 9px 20px;
+    padding: 7px 20px;
     text-decoration: none;
     cursor: pointer;
+    font-size: 14px;
 `
 
 const App = () => {
@@ -23,13 +32,15 @@ const App = () => {
             <Container>
                 <div>
                     <NavLink to="/">Home</NavLink>
-                    <NavLink to="/features">Features</NavLink>
+                    <NavTitle>features</NavTitle>
+                    <NavLink to="/feature-usage">Feature Usage</NavLink>
+                    <NavTitle>others</NavTitle>
                     <NavLink to="/opinions">Opinions</NavLink>
                     <NavLink to="/happiness">Happiness</NavLink>
                 </div>
                 <Router>
                     <Home path="/" />
-                    <Feature path="/features" />
+                    <FeatureUsage path="/feature-usage" />
                     <Opinions path="/opinions" />
                     <Happiness path="/happiness" />
                 </Router>
