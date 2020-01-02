@@ -36,7 +36,20 @@ const DemographicBar = ({ metric, year, filters, setIsLoading }) => {
 
     if (error) return `Error! ${error.message}`
 
-    let buckets = data !== undefined ? data.survey.demographics.metric.year.buckets : []
+    const buckets = data !== undefined ? data.survey.demographics.metric.year.buckets : []
+
+    const sortedBuckets = keys[metric].map(({ id: key }) => {
+        const bucket = buckets.find(b => b.id === key)
+        if (bucket === undefined) {
+            return {
+                id: key,
+                count: 0,
+                percentage: 0
+            }
+        }
+
+        return bucket
+    })
 
     return (
         <div>
@@ -45,7 +58,7 @@ const DemographicBar = ({ metric, year, filters, setIsLoading }) => {
                     <VerticalBarChart
                         keys={keys[metric]}
                         total={data.survey.demographics.metric.year.total}
-                        buckets={buckets}
+                        buckets={sortedBuckets}
                         i18nNamespace={metric}
                         // translateData={translateData}
                         mode="relative"
