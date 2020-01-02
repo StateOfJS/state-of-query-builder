@@ -7,18 +7,6 @@ import { useTheme } from '@nivo/core'
 import { Chip } from '@nivo/tooltip'
 import { ChartLabel } from './ChartLabel'
 
-const patterns = [
-    {
-        id: 'empty',
-        type: 'patternLines',
-        background: 'inherit',
-        color: 'rgba(0, 0, 0, .08)',
-        rotation: -45,
-        lineWidth: 4,
-        spacing: 8
-    }
-]
-
 // Custom labels using an extra `layer`,
 // this way, we can add an extra outline to bar labels
 const getLabels = units => ({ bars }) => {
@@ -125,7 +113,7 @@ export const GaugeBarChart = ({
             animate={true}
             theme={theme}
             layers={['bars', labelsLayer]}
-            defs={patterns}
+            defs={[theme.emptyPattern]}
             fill={patternRules}
             tooltip={bar => (
                 <Tooltip

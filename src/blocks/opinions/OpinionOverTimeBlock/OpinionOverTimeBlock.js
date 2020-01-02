@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { gql } from 'apollo-boost'
 import { useQuery } from '@apollo/react-hooks'
 import { AddChart, EnumSelector, Filters, StreamChart } from '../../../core'
@@ -47,7 +47,7 @@ const OpinionOverTime = ({ opinion, filters, setIsLoading }) => {
                         data={years}
                         keys={opinions.map(o => o.id)}
                         units="count"
-                        applyEmptyPatternTo="never_heard"
+                        applyEmptyPatternTo={2}
                         // namespace={bucketKeysName}
                     />
                 </div>

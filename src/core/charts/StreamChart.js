@@ -35,25 +35,6 @@ const Dot = ({ x, y, data, current, units }) => {
     )
 }
 
-const patterns = [
-    {
-        id: 'lines',
-        type: 'patternLines',
-        background: 'inherit',
-        color: 'rgba(0, 0, 0, .07)',
-        rotation: -45,
-        lineWidth: 3,
-        spacing: 6
-    }
-]
-
-const margin = {
-    top: 40,
-    right: 30,
-    bottom: 40,
-    left: 30
-}
-
 const getChartData = (data, units) => {
     return data.map(y => {
         const { year, buckets } = y
@@ -67,7 +48,16 @@ const getChartData = (data, units) => {
     })
 }
 
-export const StreamChart = ({ data, keys, units, className, current, colorScale, namespace }) => {
+export const StreamChart = ({
+    data,
+    keys,
+    units,
+    className,
+    current,
+    colorScale,
+    namespace,
+    applyEmptyPatternTo
+}) => {
     // const { translate } = useI18n()
 
     const horizontalAxis = {
@@ -100,7 +90,12 @@ export const StreamChart = ({ data, keys, units, className, current, colorScale,
                 offsetType="expand"
                 colors={getLayerColor}
                 curve="monotoneX"
-                margin={margin}
+                margin={{
+                    top: 40,
+                    right: 30,
+                    bottom: 40,
+                    left: 30
+                }}
                 keys={keys}
                 data={getChartData(data, units)}
                 enableGridX={false}
@@ -114,13 +109,13 @@ export const StreamChart = ({ data, keys, units, className, current, colorScale,
                 animate={true}
                 // tooltipLabel={d => translate(`${namespace}.${d.id}.short`)}
                 tooltipFormat={tooltipFormat}
-                defs={patterns}
+                defs={[theme.emptyPattern]}
                 fill={[
                     {
                         match: {
-                            id: 'never_heard'
+                            id: applyEmptyPatternTo
                         },
-                        id: 'lines'
+                        id: 'empty'
                     }
                 ]}
             />

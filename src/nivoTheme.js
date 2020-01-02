@@ -13,16 +13,14 @@ export default {
     },
     opinionScaleColors: colorRange,
     salaryColors: colorRange,
-    sourceColors: {
-        Email: colors.teal,
-        Twitter: colors.aqua,
-        Reddit: colors.red,
-        Slack: 'rgb(110, 93, 133)',
-        'JavaScript Weekly': colors.yellow,
-        'Hacker News': 'rgb(240, 128, 72)',
-        Medium: '#48A57F',
-        Facebook: 'rgb(99, 130, 197)',
-        'Other/Unknown': colors.greyMedium
+    emptyPattern: {
+        id: 'empty',
+        type: 'patternLines',
+        background: 'inherit',
+        color: 'rgba(0, 0, 0, .07)',
+        rotation: -45,
+        lineWidth: 3,
+        spacing: 6
     },
     axis: {
         domain: {
