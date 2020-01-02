@@ -3,7 +3,7 @@ import { Router, Link } from '@reach/router'
 import { ApolloProvider } from '@apollo/react-hooks'
 import styled from 'styled-components'
 import client from './api_client'
-import { Home, FeatureUsage, Opinions, Happiness } from './pages'
+import { Home, FeatureUsage, Opinions, Happiness, DemographicsBar } from './pages'
 
 const Container = styled.div`
     display: grid;
@@ -32,6 +32,8 @@ const App = () => {
             <Container>
                 <div>
                     <NavLink to="/">Home</NavLink>
+                    <NavTitle>demographics</NavTitle>
+                    <NavLink to="/demographics-bar">Demographics Bar</NavLink>
                     <NavTitle>features</NavTitle>
                     <NavLink to="/feature-usage">Feature Usage</NavLink>
                     <NavTitle>others</NavTitle>
@@ -40,6 +42,7 @@ const App = () => {
                 </div>
                 <Router>
                     <Home path="/" />
+                    <DemographicsBar path="/demographics-bar" />
                     <FeatureUsage path="/feature-usage" />
                     <Opinions path="/opinions" />
                     <Happiness path="/happiness" />

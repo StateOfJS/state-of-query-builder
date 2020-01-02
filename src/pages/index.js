@@ -1,3 +1,4 @@
+export * from './DemographicBar'
 export * from './FeatureUsage'
 export * from './Happiness'
 export * from './Home'
