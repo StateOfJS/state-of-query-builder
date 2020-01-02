@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react'
 import PropTypes from 'prop-types'
-// import theme from 'nivoTheme'
+import theme from '../../nivoTheme'
 // import { useI18n } from 'core/i18n/i18nContext'
 import { ResponsiveBar } from '@nivo/bar'
 import { useTheme } from '@nivo/core'
@@ -123,7 +123,7 @@ export const GaugeBarChart = ({
             enableGridX={false}
             enableGridY={false}
             animate={true}
-            // theme={theme}
+            theme={theme}
             layers={['bars', labelsLayer]}
             defs={patterns}
             fill={patternRules}

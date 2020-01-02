@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSync } from '@fortawesome/free-solid-svg-icons'
+import { faSync, faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { filtersConfig } from './constants'
 import AddFilter from './AddFilter'
 import Filter from './Filter'
@@ -86,8 +86,7 @@ export const Filters = ({ children, ...props }) => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FiltersContainer>
                     <RefreshButton type="submit">
-                        {isLoading && 'loading...'}
-                        {!isLoading && <FontAwesomeIcon icon={faSync} />}
+                        <FontAwesomeIcon icon={isLoading ? faSpinner : faSync} />
                     </RefreshButton>
                     {activeFilters.map(filter => (
                         <Filter

@@ -1,7 +1,8 @@
-import React, { useState, Fragment } from 'react'
+import React, { useEffect, useState } from 'react'
 import { gql } from 'apollo-boost'
 import { useQuery } from '@apollo/react-hooks'
 import { AddChart, EnumSelector, Filters } from '../../../core'
+import { HappinessOverTimeChart } from './HappinessOverTimeChart'
 
 const QUERY = gql`
     query HappinessOverTime($id: CategoryID!, $filters: Filters) {
@@ -10,16 +11,7 @@ const QUERY = gql`
                 happiness(filters: $filters) {
                     allYears {
                         year
-                        completion {
-                            total
-                            count
-                            percentage
-                        }
-                        buckets {
-                            id
-                            count
-                            percentage
-                        }
+                        mean
                     }
                 }
             }
@@ -27,7 +19,7 @@ const QUERY = gql`
     }
 `
 
-const HappinessOverTime = ({ category, filters }) => {
+const HappinessOverTime = ({ category, filters, setIsLoading }) => {
     const { loading, error, data } = useQuery(QUERY, {
         variables: {
             id: category,
@@ -36,44 +28,13 @@ const HappinessOverTime = ({ category, filters }) => {
         fetchPolicy: 'no-cache'
     })
 
+    useEffect(() => setIsLoading(loading), [setIsLoading, loading])
+
     if (error) return `Error! ${error.message}`
 
     const years = data !== undefined ? data.survey.category.happiness.allYears : []
 
-    return (
-        <div>
-            {loading && '...loading...'}
-            {years.length > 0 && (
-                <table>
-                    <tbody>
-                        {years.map(year => {
-                            return (
-                                <Fragment key={year.year}>
-                                    <tr>
-                                        <th>{year.year}</th>
-                                        <td>
-                                            completion:&nbsp;
-                                            {year.completion.percentage}% ({year.completion.count}/
-                                            {year.completion.total})
-                                        </td>
-                                    </tr>
-                                    {year.buckets.map(bucket => {
-                                        return (
-                                            <tr key={bucket.id}>
-                                                <th>{bucket.id}</th>
-                                                <td>{bucket.percentage}%</td>
-                                                <td>{bucket.count}</td>
-                                            </tr>
-                                        )
-                                    })}
-                                </Fragment>
-                            )
-                        })}
-                    </tbody>
-                </table>
-            )}
-        </div>
-    )
+    return <div>{years.length > 0 && <HappinessOverTimeChart data={years} />}</div>
 }
 
 export const HappinessOverTimeBlock = () => {
